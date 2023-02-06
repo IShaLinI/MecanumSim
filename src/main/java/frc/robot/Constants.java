@@ -14,9 +14,9 @@ public class Constants {
     public static final int BACK_RIGHT_ID = 4;
     public static final int PIGEON_ID = 5;
 
-    public static final double DRIVETRAIN_kS = 0.13305;
-    public static final double DRIVETRAIN_kV = 2.2876;
-    public static final double DRIVETRAIN_kA = 0.31596;
+    public static final double DRIVETRAIN_kS = 0.13305 / 12;
+    public static final double DRIVETRAIN_kV = 2.2876 / 12;
+    public static final double DRIVETRAIN_kA = 0.31596 / 12;
 
     public static final double[] DRIVETRAIN_CHARACTERIZATION = {DRIVETRAIN_kS, DRIVETRAIN_kV, DRIVETRAIN_kA};
 

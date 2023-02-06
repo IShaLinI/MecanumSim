@@ -87,6 +87,9 @@ public class Drivetrain extends SubsystemBase {
     }
 
     mFrontLeft.set(speed);
+    mFrontRight.set(speed);
+    mBackLeft.set(speed);
+    mBackRight.set(speed);
   }
 
   @Override

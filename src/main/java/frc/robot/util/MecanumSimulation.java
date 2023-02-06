@@ -77,16 +77,36 @@ public class MecanumSimulation {
 
     public void update() {
         mFrontLeftWheelSimulation.setInput(mMotorSets.get()[0] * RobotController.getBatteryVoltage());
+        mFrontRightWheelSimulation.setInput(mMotorSets.get()[1] * RobotController.getBatteryVoltage());
+        mBackLeftWheelSimulation.setInput(mMotorSets.get()[2] * RobotController.getBatteryVoltage());
+        mBackRightWheelSimulation.setInput(mMotorSets.get()[3] * RobotController.getBatteryVoltage());
+
         mFrontLeftWheelSimulation.update(dtSeconds);
+        mFrontRightWheelSimulation.update(dtSeconds);
+        mBackLeftWheelSimulation.update(dtSeconds);
+        mBackRightWheelSimulation.update(dtSeconds);
 
-        double frontLeftVelocity = (mFrontLeftWheelSimulation.getAngularVelocityRPM() * mGearRatio);
-
-        SmartDashboard.putNumber("Motor RPM", mFrontLeftWheelSimulation.getAngularVelocityRPM() * mGearRatio);
-
+        double frontLeftVelocity = (mFrontLeftWheelSimulation.getAngularVelocityRPM() * mGearRatio * 2048) / 600;
         double frontLeftPositionDelta = frontLeftVelocity * 10  * dtSeconds;
 
+        double frontRightVelocity = (mFrontRightWheelSimulation.getAngularVelocityRPM() * mGearRatio * 2048) / 600;
+        double frontRightPositionDelta = frontRightVelocity * 10  * dtSeconds;
+
+        double backLeftVelocity = (mBackLeftWheelSimulation.getAngularVelocityRPM() * mGearRatio * 2048) / 600;
+        double backLeftPositionDelta = backLeftVelocity * 10  * dtSeconds;
+
+        double backRightVelocity = (mBackRightWheelSimulation.getAngularVelocityRPM() * mGearRatio * 2048) / 600;
+        double backRightPositionDelta = backRightVelocity * 10  * dtSeconds;
+
         mFrontLeftSimCollection.setIntegratedSensorVelocity((int)frontLeftVelocity);
+        mFrontRightSimCollection.setIntegratedSensorVelocity((int)frontRightVelocity);
+        mBackLeftSimCollection.setIntegratedSensorVelocity((int)backLeftVelocity);
+        mBackRightSimCollection.setIntegratedSensorVelocity((int)backRightVelocity);
+        
         mFrontLeftSimCollection.addIntegratedSensorPosition((int)frontLeftPositionDelta);
+        mFrontRightSimCollection.addIntegratedSensorPosition((int)frontRightPositionDelta);
+        mBackLeftSimCollection.addIntegratedSensorPosition((int)backLeftPositionDelta);
+        mBackRightSimCollection.addIntegratedSensorPosition((int)backRightPositionDelta);
 
     }
 
