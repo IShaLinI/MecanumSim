@@ -44,7 +44,8 @@ public class Drivetrain extends SubsystemBase {
       mKinematics,
       mPigeon.getRotation2d(),
       getCurrentDistances(),
-      new Pose2d(new Translation2d(4, 4), new Rotation2d()));
+      new Pose2d()
+  );
 
   private final MecanumSimulation mSimulation = new MecanumSimulation(
     new TalonFXSimCollection[]{

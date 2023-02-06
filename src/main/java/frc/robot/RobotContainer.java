@@ -23,10 +23,10 @@ public class RobotContainer {
     mDrivetrain.setDefaultCommand(
       new RunCommand(
         () -> mDrivetrain.drive(
-          0,
-          0,
-          1,
-          false
+          -mController.getLeftY(),
+          -mController.getLeftX(),
+          -mController.getRightX(),
+          true
         ), 
         mDrivetrain
       )
