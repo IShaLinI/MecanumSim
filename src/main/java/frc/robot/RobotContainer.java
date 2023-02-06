@@ -22,7 +22,12 @@ public class RobotContainer {
   private void configureBindings() {
     mDrivetrain.setDefaultCommand(
       new RunCommand(
-        () -> mDrivetrain.set(mController.getLeftY()),
+        () -> mDrivetrain.drive(
+          0,
+          0,
+          1,
+          false
+        ), 
         mDrivetrain
       )
     );

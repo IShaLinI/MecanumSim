@@ -14,9 +14,11 @@ import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 
 /*
  * Inacurate Mecanum "Sim" for Testing Purposes
@@ -48,7 +50,7 @@ public class MecanumSimulation {
     public  MecanumSimulation(
         TalonFXSimCollection[] _motorSims,
         BasePigeonSimCollection _pigeonSim,
-        LinearSystem<N1, N1, N1> _drivetrainPlant,
+        double[] _sysid,
         MecanumDriveKinematics _kinematics,
         DCMotor _motor,
         double _gearRatio, 
@@ -63,6 +65,8 @@ public class MecanumSimulation {
 
         mBasePigeonSimCollection = _pigeonSim;
 
+        LinearSystem<N1, N1, N1> _drivetrainPlant = LinearSystemId.identifyVelocitySystem(_sysid[1] / 12, _sysid[2] / 12);
+
         mFrontLeftWheelSimulation = new FlywheelSim(_drivetrainPlant, _motor, _gearRatio);
         mFrontRightWheelSimulation = new FlywheelSim(_drivetrainPlant, _motor, _gearRatio);
         mBackLeftWheelSimulation = new FlywheelSim(_drivetrainPlant, _motor, _gearRatio);
@@ -76,6 +80,7 @@ public class MecanumSimulation {
     }
 
     public void update() {
+
         mFrontLeftWheelSimulation.setInput(mMotorSets.get()[0] * RobotController.getBatteryVoltage());
         mFrontRightWheelSimulation.setInput(mMotorSets.get()[1] * RobotController.getBatteryVoltage());
         mBackLeftWheelSimulation.setInput(mMotorSets.get()[2] * RobotController.getBatteryVoltage());
@@ -107,6 +112,8 @@ public class MecanumSimulation {
         mFrontRightSimCollection.addIntegratedSensorPosition((int)frontRightPositionDelta);
         mBackLeftSimCollection.addIntegratedSensorPosition((int)backLeftPositionDelta);
         mBackRightSimCollection.addIntegratedSensorPosition((int)backRightPositionDelta);
+
+        mBasePigeonSimCollection.addHeading(Units.radiansToDegrees(mKinematics.toChassisSpeeds(mWheelSpeeds.get()).omegaRadiansPerSecond) * dtSeconds);
 
     }
 
