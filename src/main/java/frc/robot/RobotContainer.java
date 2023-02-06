@@ -6,20 +6,26 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Drivetrain;
 
 public class RobotContainer {
 
   private Drivetrain mDrivetrain = new Drivetrain();
+  private CommandXboxController mController = new CommandXboxController(0);
 
   public RobotContainer() {
     configureBindings();
   }
 
   private void configureBindings() {
-
-    mDrivetrain.setDefaultCommand(Commands.print("No default command configured"));
-
+    mDrivetrain.setDefaultCommand(
+      new RunCommand(
+        () -> mDrivetrain.set(mController.getLeftY()),
+        mDrivetrain
+      )
+    );
   }
 
   public Command getAutonomousCommand() {
