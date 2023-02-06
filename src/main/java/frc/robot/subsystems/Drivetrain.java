@@ -57,6 +57,9 @@ public class Drivetrain extends SubsystemBase {
   );
 
   public Drivetrain() {
+
+    mFrontRight.setInverted(true);
+    mBackRight.setInverted(true);
     
   }
 
@@ -88,6 +91,11 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
+
+    SmartDashboard.putNumber("Wheel Velocities/FrontLeft", getWheelSpeeds().frontLeftMetersPerSecond);
+    SmartDashboard.putNumber("Wheel Velocities/FrontRight", getWheelSpeeds().frontRightMetersPerSecond);
+    SmartDashboard.putNumber("Wheel Velocities/BackLeft", getWheelSpeeds().rearLeftMetersPerSecond);
+    SmartDashboard.putNumber("Wheel Velocities/BackRight", getWheelSpeeds().rearRightMetersPerSecond);
   }
 
   @Override

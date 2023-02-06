@@ -4,7 +4,6 @@
 
 package frc.robot.util;
 
-import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
@@ -15,11 +14,14 @@ import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+/*
+ * Inacurate Mecanum "Sim" for Testing Purposes
+ * Disclaimer "Will not be accurate to real hardware"
+ */
 public class MecanumSimulation {
 
     private TalonFXSimCollection mFrontLeftSimCollection;
@@ -43,7 +45,7 @@ public class MecanumSimulation {
 
     private static double dtSeconds = 0.02;
 
-    public MecanumSimulation(
+    public  MecanumSimulation(
         TalonFXSimCollection[] _motorSims,
         BasePigeonSimCollection _pigeonSim,
         LinearSystem<N1, N1, N1> _drivetrainPlant,
@@ -61,11 +63,10 @@ public class MecanumSimulation {
 
         mBasePigeonSimCollection = _pigeonSim;
 
-        final FlywheelSim mBaseWheelSim = new FlywheelSim(_drivetrainPlant, _motor, _gearRatio);
-        mFrontLeftWheelSimulation = mBaseWheelSim;
-        mFrontRightWheelSimulation = mBaseWheelSim;
-        mBackLeftWheelSimulation = mBaseWheelSim;
-        mBackRightWheelSimulation = mBaseWheelSim;
+        mFrontLeftWheelSimulation = new FlywheelSim(_drivetrainPlant, _motor, _gearRatio);
+        mFrontRightWheelSimulation = new FlywheelSim(_drivetrainPlant, _motor, _gearRatio);
+        mBackLeftWheelSimulation = new FlywheelSim(_drivetrainPlant, _motor, _gearRatio);
+        mBackRightWheelSimulation = new FlywheelSim(_drivetrainPlant, _motor, _gearRatio);
 
         mKinematics = _kinematics;
         mGearRatio = _gearRatio;
@@ -76,18 +77,16 @@ public class MecanumSimulation {
 
     public void update() {
         mFrontLeftWheelSimulation.setInput(mMotorSets.get()[0] * RobotController.getBatteryVoltage());
-        mFrontRightWheelSimulation.setInput(mMotorSets.get()[1] * RobotController.getBatteryVoltage());
-        mBackLeftWheelSimulation.setInput(mMotorSets.get()[2] * RobotController.getBatteryVoltage());
-        mBackRightWheelSimulation.setInput(mMotorSets.get()[3] * RobotController.getBatteryVoltage());
-
         mFrontLeftWheelSimulation.update(dtSeconds);
-        mFrontRightWheelSimulation.update(dtSeconds);
-        mBackLeftWheelSimulation.update(dtSeconds);
-        mBackRightWheelSimulation.update(dtSeconds);
 
-        mFrontLeftSimCollection.setIntegratedSensorVelocity((int)(mFrontLeftWheelSimulation.getAngularVelocityRPM() * mGearRatio));
-        
-        System.out.println(mFrontLeftWheelSimulation.getAngularVelocityRPM() * mGearRatio);
+        double frontLeftVelocity = (mFrontLeftWheelSimulation.getAngularVelocityRPM() * mGearRatio);
+
+        SmartDashboard.putNumber("Motor RPM", mFrontLeftWheelSimulation.getAngularVelocityRPM() * mGearRatio);
+
+        double frontLeftPositionDelta = frontLeftVelocity * 10  * dtSeconds;
+
+        mFrontLeftSimCollection.setIntegratedSensorVelocity((int)frontLeftVelocity);
+        mFrontLeftSimCollection.addIntegratedSensorPosition((int)frontLeftPositionDelta);
 
     }
 
